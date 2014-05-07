@@ -125,7 +125,7 @@ void* Mem_Alloc(int size)
   int shrinkSize;
 
   if(size <= 0){
-    puts("Size is invalid");
+    //puts("Size is invalid");
     return NULL;
   }
 
@@ -157,7 +157,7 @@ void* Mem_Alloc(int size)
   }
 
   //Check Contents before allocation
-  Mem_Dump();
+  //Mem_Dump();
   
   if(nodeToAllocate != NULL){
     //Get the size and next before changing the address of the pointer
@@ -181,7 +181,7 @@ void* Mem_Alloc(int size)
     nodeToAllocate->size_status = size + 1;
     nodeToAllocate->next = nodeToShrink;
 
-    Mem_Dump();
+    //Mem_Dump();
     
     return current;
   }
@@ -207,54 +207,51 @@ int Mem_Free(void *ptr)
   block_header* blockPointer = NULL;
   int sizeToExpand;
 
-  puts("Before 212");
+  //puts("Before 212");
   //Check to see if pointer is pointing to NULL
   if(ptr == NULL){
     return -1;
   }
-  puts("Before 216");
+  //puts("Before 216");
   blockPointer = (block_header *)ptr;
 
-  puts("Before 220");
+  //puts("Before 220");
   //Now check to see if pointer is busy block
   if(!(blockPointer->size_status & 1)){
     return -1;
   }
 
-  puts("Before 226");
+  //puts("Before 226");
   //Mark block as free
   blockPointer->size_status += -1;
 
   //Now coalesce
   //First check to see if the node to the right is free
-  puts("Before 231");
+  //puts("Before 231");
   nextBlock = blockPointer->next;
   //Make sure nextBlock isn't NULL
   if(nextBlock != NULL){
-    puts("Before 236");
+    //puts("Before 236");
     //check to see if the block is free
     if(!(nextBlock->size_status & 1)){
-      puts("Before 237");
+      //puts("Before 237");
       sizeToExpand = nextBlock->size_status + (int)sizeof(block_header);
       blockPointer->size_status += sizeToExpand;
       blockPointer->next = nextBlock->next;
     }
   }
 
-  puts("Before 245");
+  //puts("Before 245");
   //Iterate through the list to find the block before ptr
   current = list_head;
-  puts("Before 248");
+  //puts("Before 248");
   if(current != blockPointer){
     while(current->next != blockPointer){
-      puts("Before 250");
+      //puts("Before 250");
       current = current->next;
-      printf("current: %x\n", current);
-      printf("current->next: %x\n", current->next);
-      printf("blockPointer: %x", blockPointer);
     }
 
-    puts("Before 251");
+    //puts("Before 251");
     //Now know current is right before pointer, and check to see if busy
     if(!(current->size_status & 1)){
         sizeToExpand = blockPointer->size_status + (int)sizeof(block_header);
@@ -264,7 +261,7 @@ int Mem_Free(void *ptr)
 
   }
 
-  Mem_Dump();
+  //Mem_Dump();
   return 0;
 }
 
