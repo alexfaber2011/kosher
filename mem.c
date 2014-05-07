@@ -144,7 +144,7 @@ void* Mem_Alloc(int size)
       current = current->next;
     }else{
       //Now that we've found a free block, let's see if it's big enough
-      if(currentSize > size + (int)sizeof(block_header)){
+      if(currentSize >= size + (int)sizeof(block_header)){
         //If it's big enough, this is the block that we want
         nodeToAllocate = current;
         nodeToShrink = current;
@@ -206,6 +206,7 @@ int Mem_Free(void *ptr)
   block_header* nextBlock = NULL;
   block_header* blockPointer = NULL;
   int sizeToExpand;
+  bool isFound;
 
   //puts("Before 212");
   //Check to see if pointer is pointing to NULL
@@ -214,6 +215,19 @@ int Mem_Free(void *ptr)
   }
   //puts("Before 216");
   blockPointer = (block_header *)ptr;
+
+  //check to see if the ptr exists in the list
+  isFound = false;
+  current = list_head;
+  while(current != NULL && !isfound){
+    if(current == blockPointer){
+      isFound = true;
+    }
+    current = current->next;
+  }
+  if(!isFound){
+    return -1;
+  }
 
   //puts("Before 220");
   //Now check to see if pointer is busy block
