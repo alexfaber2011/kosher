@@ -118,6 +118,8 @@ void* Mem_Alloc(int size)
   block_header* next;                   //Temp hold next value for nodeToShrink
   int currentSize;                      //size of the node we're currently looking at.
   bool found = false;
+  char* addressChange;
+
 
   //temp
   int shrinkSize;
@@ -128,7 +130,9 @@ void* Mem_Alloc(int size)
   }
 
   //Adjust size to make it speedy
-  size += 4 - (size % 4);
+  if((size % 4) != 0){
+    size += 4 - (size % 4);
+  }
 
   //Begin traversing list
   current = list_head;
@@ -160,14 +164,15 @@ void* Mem_Alloc(int size)
     shrinkSize =  nodeToShrink->size_status - size - (int)sizeof(block_header);
     next = nodeToShrink->next;
 
+
     //Change the address of the pointer.
-    //nodeToShrink += (size / 8) + (int)sizeof(block_header);
-    nodeToShrink += (size + (int)sizeof(block_header)) / 8;
-    //nodeToShrink += size;
+    //nodeToShrink += (size + (int)sizeof(block_header)) / size;
+    addressChange = (char *)nodeToShrink + size + (int)sizeof(block_header);
     //printf("The addition: %x", nodeToShrink + (size / 8 ) + (int)sizeof(block_header));
     //printf("\n\nNew nodeToShrink address: %x", nodeToShrink);
 
     //Next, modify the size and update next of nodetoShrink
+    nodeToShrink = (block_header *)addressChange;
     nodeToShrink->size_status = shrinkSize;
     nodeToShrink->next = next;
     //printf("\n\nnodeToShrink after modifying address: %i\n\n", nodeToShrink->size_status);
@@ -196,7 +201,35 @@ void* Mem_Alloc(int size)
 /* - Coalesce if one or both of the immediate neighbours are free */
 int Mem_Free(void *ptr)
 {
-  /* Your code should go in here */
+  //local variables
+  block_header* current = NULL;         //means of traversing list
+
+  //Check to see if pointer is pointing to NULL
+  if(ptr == NULL){
+    return -1;
+  }
+
+  //Now check to see if pointer is busy block
+  if(!(ptr->size_status & 1)){
+    return -1;
+  }
+
+  //Mark block as free
+  ptr->size_status += -1;
+
+  //Now coalesce
+  //Iterate through the list to find the block before ptr
+  current = list_head;
+  while(current->next != NULL || current->next != ptr){
+    current = current->next;
+  }
+
+  //Now know current is right before pointer, and check to see if busy
+  if(!(current->size_status & 1)){
+    
+  }
+
+
   return -1;
 }
 
