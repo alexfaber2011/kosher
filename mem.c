@@ -144,7 +144,7 @@ void* Mem_Alloc(int size)
       current = current->next;
     }else{
       //Now that we've found a free block, let's see if it's big enough
-      if(currentSize > size){
+      if(currentSize > size + (int)sizeof(block_header)){
         //If it's big enough, this is the block that we want
         nodeToAllocate = current;
         nodeToShrink = current;
