@@ -4,30 +4,28 @@
 #include "mem.h"
 
 int main() {
+   int x = 50;   //temporary variable to point to
+   void* ptr[4];
+   void* badPtr;
+   badPtr = &x;
+
    assert(Mem_Init(4096) == 0);
-   Mem_Free(ptr[2]) == 0
-   void * ptr[4];
 
+   //Insert a proper pointer
    ptr[0] = Mem_Alloc(800);
-   assert(ptr[0] != NULL);
 
-   ptr[1] = Mem_Alloc(800);
-   assert(ptr[1] != NULL);
+   //Free it; test for 0 because it should've worked fine
+   assert(Mem_Free(ptr[0]) == 0);
+   puts("After assert(Mem_Free(ptr[0]) == 0);");
+   Mem_Dump();
 
-   ptr[2] = Mem_Alloc(800);
-   assert(ptr[2] != NULL);
-
-   ptr[3] = Mem_Alloc(800);
-   assert(ptr[3] != NULL);
-
-   while (Mem_Alloc(800) != NULL)
-     ;
-
-   assert();
-   assert(Mem_Free(ptr[1]) == 0);
-
-   ptr[2] = Mem_Alloc(1600);
-   assert(ptr[2] != NULL);
+   //Free it again; should return -1 because the pointer has already been freed
+   assert(Mem_Free(ptr[0]) == -1);
+   puts("Mem_Free(ptr[0]) == 0) Again");
+   Mem_Dump();
+   assert(Mem_Free(badPtr) == -1);
+   puts("After 'freeing' pointer that resides outside of address space");
+   Mem_Dump();
 
    exit(0);
 }
