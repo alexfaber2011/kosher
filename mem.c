@@ -1,7 +1,8 @@
 /******************************************************************************
  * FILENAME: mem.c
- * AUTHOR:   afaber2@wisc.edu <Alex Faber>
- * DATE:     20 Nov 2013
+ * AUTHOR:   cherin@cs.wisc.edu <Cherin Joseph>
+ * MODIFIED BY:  Anthony To, section1, Alex Faber, section1
+ * DATE:     7 May 2014
  * PROVIDES: Contains a set of library functions for memory allocation
  * *****************************************************************************/
 
