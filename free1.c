@@ -1,4 +1,12 @@
-/* custom free space */
+/******************************************************************************
+ * FILENAME: free1.c
+ * Authors:  Anthony To, section1, Alex Faber, section1
+ * DATE:     7 May 2014
+ * PROVIDES: Custom tests for Mem_Free; takes care of some edge cases that the
+ *             provided tests didn't.
+ * *****************************************************************************/
+
+
 #include <assert.h>
 #include <stdlib.h>
 #include "mem.h"
