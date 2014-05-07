@@ -206,6 +206,24 @@ int Mem_Free(void *ptr)
   block_header* nextBlock = NULL;
   block_header* blockPointer = NULL;
   int sizeToExpand;
+	int ptrIsFound = 0;
+	
+	current = list_head;
+	//Check that ptr exists within the memory space
+	while(current->next != NULL){
+		if(current == ptr){
+			ptrIsFound = 1;
+		}
+		current = current->next;
+	}
+	//If ptr is not found, return -1
+	if(ptrIsFound == 0){
+		return -1;
+	}
+	
+	//Reset current to point to list_head
+	current = current->next;
+	
 
   //puts("Before 212");
   //Check to see if pointer is pointing to NULL
@@ -243,7 +261,6 @@ int Mem_Free(void *ptr)
 
   //puts("Before 245");
   //Iterate through the list to find the block before ptr
-  current = list_head;
   //puts("Before 248");
   if(current != blockPointer){
     while(current->next != blockPointer){
