@@ -203,34 +203,69 @@ int Mem_Free(void *ptr)
 {
   //local variables
   block_header* current = NULL;         //means of traversing list
+  block_header* nextBlock = NULL;
+  block_header* blockPointer = NULL;
+  int sizeToExpand;
 
+  puts("Before 212");
   //Check to see if pointer is pointing to NULL
   if(ptr == NULL){
     return -1;
   }
+  puts("Before 216");
+  blockPointer = (block_header *)ptr;
 
+  puts("Before 220");
   //Now check to see if pointer is busy block
-  if(!(ptr->size_status & 1)){
+  if(!(blockPointer->size_status & 1)){
     return -1;
   }
 
+  puts("Before 226");
   //Mark block as free
-  ptr->size_status += -1;
+  blockPointer->size_status += -1;
 
   //Now coalesce
+  //First check to see if the node to the right is free
+  puts("Before 231");
+  nextBlock = blockPointer->next;
+  //Make sure nextBlock isn't NULL
+  if(nextBlock != NULL){
+    puts("Before 236");
+    //check to see if the block is free
+    if(!(nextBlock->size_status & 1)){
+      puts("Before 237");
+      sizeToExpand = nextBlock->size_status + (int)sizeof(block_header);
+      blockPointer->size_status += sizeToExpand;
+      blockPointer->next = nextBlock->next;
+    }
+  }
+
+  puts("Before 245");
   //Iterate through the list to find the block before ptr
   current = list_head;
-  while(current->next != NULL || current->next != ptr){
-    current = current->next;
+  puts("Before 248");
+  if(current != blockPointer){
+    while(current->next != blockPointer){
+      puts("Before 250");
+      current = current->next;
+      printf("current: %x\n", current);
+      printf("current->next: %x\n", current->next);
+      printf("blockPointer: %x", blockPointer);
+    }
+
+    puts("Before 251");
+    //Now know current is right before pointer, and check to see if busy
+    if(!(current->size_status & 1)){
+        sizeToExpand = blockPointer->size_status + (int)sizeof(block_header);
+        current->size_status += sizeToExpand;
+        current->next = blockPointer->next;
+    }
+
   }
 
-  //Now know current is right before pointer, and check to see if busy
-  if(!(current->size_status & 1)){
-    
-  }
-
-
-  return -1;
+  Mem_Dump();
+  return 0;
 }
 
 /* Function to be used for debug */
